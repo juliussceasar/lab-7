@@ -15,30 +15,29 @@ Controller, считывает данные, поступающие с клие�
 + Чтобы запустить сервер, пометить папку \lab-7\src\Server как source, Client пометить как excluded.
 + Чтобы запустить клиент, пометить \lab-7\src\Client как source, Server как excluded.
 
-+ Клиент и сервер находятся в обмене данными, эти данные передаются посредством [сериализованных команды](/src/Commands/SerializedCommands).
++ Клиент и сервер находятся в обмене данными, эти данные передаются посредством [сериализованных команды](/src/Server/Commands/SerializedCommands).
 Они выделены в 4 типа:
 1. SerializedArgumentCommand - класс для сериализации команд с аргументом.
 2. SerializedObjectCommand - класс для сериализации команд с объектами. Например add.
 3. SerializedCombinedCommand - класс для сериализации комбинированных команд(с объектом и аргументом). Нужен только в update.
 4. SerializedMessage - класс, который несет в себе обычное текстовое сообщение. Используется для уведомлений.
 
-+ Получив одну из сериализованных команд, мы должны определить ее тип, делается это в [декрипторе](/src/Utils/CommandHandler/Decrypting.java)
++ Получив одну из сериализованных команд, мы должны определить ее тип, делается это в [трансляторе](/src/Server/Utils/CommandHandler/Translating.java)
 ```Java
-if (o instanceof SerializedArgumentCommand) {  // Проверка на причастность к одной из сериалованных команд.
-    SerializedArgumentCommand argumentCommand = (SerializedArgumentCommand) o; // Приводим типы.
-    Command command = argumentCommand.getCommand(); // Получаем команду.
-    String arg = argumentCommand.getArg(); // Получаем аргумент.
-    command.execute(arg, socket);  // Вызываем конкретный класс команды. Внимание! Абстрактный класс команды изменен, не поленись зайди и посмотри что там изменилось.
-}
+if (o instanceof SerializedCommand) {
+            SerializedCommand serializedCommand = (SerializedCommand) o;
+            ACommand command = serializedCommand.getCommand();
+            command.execute(serializedCommand, socket, commandReceiver);
+        }
 ```
 
 
-+ После экзекюта команды, мы попадаем в соответствующий метод [ресивера](/src/Commands/CommandReceiver.java)
++ После execute команды, мы попадаем в соответствующий метод [CommandReceiver](/src/Server/Commands/CommandReceiver.java)
 ```Java
-public void clear() throws IOException {
-    CollectionManager.clear();  // Делаем нужную работу через менеджер коллекции.
-    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream(  // Создаем выходной поток объектов для клиента. 
-    out.writeObject(new SerializedMessage("Коллекция успешно очищена."));  // Шлем сообщение на клиент.
-    logger.info(String.format("Клиенту %s:%s отправлен результат работы команды CLEAR", socket.getInetAddress(), socket.getPort())); // Логгируем
-}
+public void show(SerializedCommand command, Socket socket) throws IOException, DatabaseException {
+        if (checkUser(command.getLogin(), command.getPassword(), socket)) {
+            sendObject(socket, new SerializedMessage(collectionManager.show()));
+            System.out.println(String.format("Клиенту %s:%s отправлен результат работы команды SHOW", socket.getInetAddress(), socket.getPort()));
+        }
+    }
 ```
