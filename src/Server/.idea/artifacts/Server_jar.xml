@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Server:jar">
+    <output-path>$USER_HOME$/Desktop/artifacts</output-path>
+    <root id="archive" name="Server.jar">
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../dependencies/commons-lang3-3.8.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="commons-lang3-3.8.1" />
+    </root>
+  </artifact>
+</component>
