@@ -3,7 +3,7 @@
 * [Код на сервере.](#Пояснения)
 
 ### Задание <a name="Задание"></a>
-![Alt-текст](https://ibb.co/fqXTGcq)
+![Alt-текст](https://imgur.com/DFByCmn)
 [Содержание](#Содержание)
 
 ### Код на сервере. <a name="Пояснения"></a>
@@ -23,6 +23,8 @@ if (o instanceof SerializedArgumentCommand) {  // Проверка на прич
     String arg = argumentCommand.getArg(); // Получаем аргумент.
     command.execute(arg, socket);  // Вызываем конкретный класс команды. Внимание! Абстрактный класс команды изменен, не поленись зайди и посмотри что там изменилось.
 }
+```
+
 
 + После экзекюта команды, мы попадаем в соответствующий метод [ресивера](/src/Commands/CommandReceiver.java)
 ```Java
