@@ -11,7 +11,7 @@
 + Там создаются: 
 1. CollectionManager, управляющий коллекцией (создание и манипулирование);
 2. DatabaseManager, управляющий коллекцией в бд (то же самое на бд);
-3. CommandReceiver, описывающий основную логику команд (делегирует выполнение CollectionManager, ответ выполнения отправляет как объект SerializedMessage на клиент)
+3. CommandReceiver, описывающий основную логику команд (делегирует выполнение CollectionManager, ответ выполнения отправляет методом sendObject как объект SerializedMessage на клиент)
 4. Controller, считывает данные, поступающие с клиента 
 + Чтобы запустить сервер, пометить папку \lab-7\src\Server как source, Client пометить как excluded.
 + Чтобы запустить клиент, пометить \lab-7\src\Client как source, Server как excluded.
