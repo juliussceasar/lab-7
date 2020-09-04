@@ -4,7 +4,6 @@ import BasicClasses.HumanBeing;
 import ClientDealer.Receiver;
 import ClientDealer.Sender;
 import ClientDealer.Session;
-import Commands.ConcreteCommands.*;
 import Commands.SerializedCommands.SerializedArgumentCommand;
 import Commands.SerializedCommands.SerializedCombinedCommand;
 import Commands.SerializedCommands.SerializedObjectCommand;
@@ -25,17 +24,15 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
     private final CommandInvoker commandInvoker;
     private final Sender sender;
     private final SocketChannel socketChannel;
-    private final ElementCreator elementCreator;
     private final Receiver receiver;
     private final Selector selector;
     private String login;
     private String password;
     public CommandReceiver(CommandInvoker commandInvoker, Session session,
-                              Sender sender, ElementCreator elementCreator, Receiver receiver) throws IOException {
+                              Sender sender, Receiver receiver) throws IOException {
         this.commandInvoker = commandInvoker;
         socketChannel = session.getSocketChannel();
         this.sender = sender;
-        this.elementCreator = elementCreator;
         this.receiver = receiver;
         selector = Selector.open();
     }
@@ -50,7 +47,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
         System.out.println("_________________________________________________________");
     }
 
-    public void info() throws ClassNotFoundException, InterruptedException {
+    public void info() throws ClassNotFoundException {
         if (login.equals("") || password.equals("")) {
             System.out.println("Вы не авторизированы");
             return;
@@ -72,7 +69,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
             return;
         }
         requestHandler(new SerializedObjectCommand(commandInvoker.getCommandMap().get("add"),
-                elementCreator.createHumanBeing(), login, password));
+                ElementCreator.createHumanBeing(), login, password));
     }
 
     public void update(String ID) throws  ClassNotFoundException {
@@ -81,7 +78,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
             return;
         }
         requestHandler(new SerializedCombinedCommand(commandInvoker.getCommandMap().get("update"),
-                elementCreator.createHumanBeing(), ID, login, password));
+                ElementCreator.createHumanBeing(), ID, login, password));
     }
 
     public void remove_by_id(String ID) throws  ClassNotFoundException {
@@ -113,7 +110,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
             return;
         }
         requestHandler(new SerializedObjectCommand(commandInvoker.getCommandMap().get("remove_greater"),
-                elementCreator.createHumanBeing(), login, password));
+                ElementCreator.createHumanBeing(), login, password));
     }
 
     public void maxByCreationDate() throws ClassNotFoundException {
@@ -135,7 +132,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((new FileInputStream(path))))) {
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.split(" ")[0].matches("add|update|remove_greater|add_if_min|" +
-                        "remove_any_by_impact_speed")) {
+                        "remove_by_impactspeed")) {
                     try {
                         command = line;
                         for (int i = 0; i < 11; i++) {
@@ -159,7 +156,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
                                 break;
                             case "update":
                                 requestHandler(new SerializedCombinedCommand(commandInvoker.getCommandMap().get("update"),
-                                        elementCreator.createHumanBeing(), command.split(" ")[1], login, password));
+                                        ElementCreator.createHumanBeing(), command.split(" ")[1], login, password));
                                 break;
                             case "remove_greater":
                                 requestHandler(new SerializedObjectCommand(commandInvoker.getCommandMap().get("remove_greater"),
@@ -170,7 +167,7 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
                                         humanBeing, login, password));
                                 break;
                             case "remove_any_by_impact_speed":
-                                requestHandler(new SerializedObjectCommand(commandInvoker.getCommandMap().get("remove_any_by_impact_speed"),
+                                requestHandler(new SerializedObjectCommand(commandInvoker.getCommandMap().get("remove_by_impactspeed"),
                                         humanBeing, login, password));
                                 break;
                         }
@@ -207,12 +204,12 @@ public class CommandReceiver { // Commands' controller в нем лежат изначально ло
             requestHandler(new SerializedCommand(commandInvoker.getCommandMap().get("print_field_ascending_type"), login, password));
     }
 
-    public void remove_by_impact_speed(String parseFloat) throws ClassNotFoundException {
+    public void removeByImpactspeed(String parseFloat) throws ClassNotFoundException {
         if (login.equals("") || password.equals("")) {
             System.out.println("Вы не авторизированы");
             return;
         }
-        requestHandler(new SerializedArgumentCommand(commandInvoker.getCommandMap().get("remove_by_impact_speed"), parseFloat, login, password));
+        requestHandler(new SerializedArgumentCommand(commandInvoker.getCommandMap().get("remove_by_impactspeed"), parseFloat, login, password));
     }
 
     public void shuffle() throws ClassNotFoundException {

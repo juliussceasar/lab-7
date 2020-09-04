@@ -19,18 +19,17 @@
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/Help.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/Info.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/MaxByCreationDate.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/RemoveAnyByImpactSpeed.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/PrintFieldAscendingWeaponType.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/RemoveByID.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/RemoveByImpactspeed.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/RemoveGreater.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/Show.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/Shuffle.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/Update.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Commands/ConcreteCommands/printFieldAscendingWeaponType.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/SerializedCommands/SerializedArgumentCommand.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/SerializedCommands/SerializedCombinedCommand.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/SerializedCommands/SerializedMessage.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/SerializedCommands/SerializedObjectCommand.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Commands/SerializedCommands/SerializedSimplyCommand.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/Utils/Creators/ElementCreator.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/Utils/Readers/EnumReaders/MoodReader.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/Utils/Readers/EnumReaders/WeaponTypeReader.java" charset="windows-1251" />
@@ -39,13 +38,7 @@
     <file url="file://$PROJECT_DIR$/Commands/Utils/Readers/PrimitiveAndReferenceReaders/RefBooleanReader.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/Utils/Readers/PrimitiveAndReferenceReaders/RefDoubleReader.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Commands/Utils/Readers/PrimitiveAndReferenceReaders/RefFloatReader.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Connect.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/ConsoleManager.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Main.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Utils/AuthAsking.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Utils/AuthHandler.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Utils/AuthRequest.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Utils/IDGenerator.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Utils/User.java" charset="windows-1251" />
   </component>
 </project>

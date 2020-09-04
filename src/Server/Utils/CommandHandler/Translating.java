@@ -20,6 +20,9 @@ public class Translating {
             SerializedCommand serializedCommand = (SerializedCommand) o;
             ACommand command = serializedCommand.getCommand();
             command.execute(serializedCommand, socket, commandReceiver);
+            System.out.println("“ут всЄ ок4");
+        } else {
+            System.out.println("Command not identified on the server.");
         }
     }
 }

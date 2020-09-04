@@ -22,6 +22,6 @@ public class Exit extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return "Команда exit : завершить программу (без сохранения в файл).";
+        return "Команда exit - завершить программу (без сохранения в файл).";
     }
 }

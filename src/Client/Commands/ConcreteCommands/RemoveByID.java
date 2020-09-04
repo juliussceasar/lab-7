@@ -19,13 +19,13 @@ public class RemoveByID extends ACommand {
     }
 
     @Override
-    public void execute(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
+    public void execute(String[] args) throws ClassNotFoundException {
         if (args.length == 2) { commandReceiver.remove_by_id(args[1]); }
         else { System.out.println("Некорректное количество аргументов. Для справки напишите help."); }
     }
 
     @Override
     public String writeInfo() {
-        return "Команда remove_by_id : remove_by_id id: удалить элемент из коллекции по его id.";
+        return "Команда remove_by_id - remove_by_id id - удалить элемент из коллекции по его id.";
     }
 }

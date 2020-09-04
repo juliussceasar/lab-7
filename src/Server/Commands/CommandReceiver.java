@@ -25,15 +25,13 @@ public class CommandReceiver {
     private final CollectionManager collectionManager;
     private final CollectionUtils collectionUtils;
     private final DatabaseManager databaseManager;
-    private final Validator validator;
     private final ForkJoinPool forkJoinPool = new ForkJoinPool(2);
     //private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
-    public CommandReceiver(CollectionManager collectionManager, CollectionUtils collectionUtils, DatabaseManager databaseManager, Validator validator) {
+    public CommandReceiver(CollectionManager collectionManager, CollectionUtils collectionUtils, DatabaseManager databaseManager) {
         this.collectionManager = collectionManager;
         this.collectionUtils = collectionUtils;
         this.databaseManager = databaseManager;
-        this.validator = validator;
     }
 
     public void sendObject(Socket socket, SerializedMessage serializedMessage) throws IOException {
@@ -100,14 +98,14 @@ public class CommandReceiver {
                 humanID = Long.parseLong(command.getArg());
                 if (collectionUtils.checkExist(humanID)) {
                     HumanBeing humanBeing = (HumanBeing) command.getObject();
-                    if (databaseManager.updateById(humanBeing, humanID, command.getLogin())) {
+                    if (databaseManager.updateById(humanBeing, humanID, command.getLogin())) //обновилось в базе?
+                    {
                         collectionManager.update(humanBeing, humanID);
-
-                    sendObject(socket, new SerializedMessage("Ёлемент с ID" + humanID + "успешно обновлен.")); }
-                    else {
-                        sendObject(socket, new SerializedMessage("Ёлемент с ID" + humanID + " создан другим пользователем."));
+                        sendObject(socket, new SerializedMessage("Ёлемент с ID" + humanID + "успешно обновлен."));
+                    } else { //произошла ошибка в statement либо элемент создан другим челом
+                        sendObject(socket, new SerializedMessage("Ёлемент с ID" + humanID + " существует, но создан другим пользователем."));
                     }
-                    sendObject(socket, new SerializedMessage("Ёлемент не обновлен."));
+                    //sendObject(socket, new SerializedMessage("Ёлемент не обновлен."));
                 } else {
                     sendObject(socket, new SerializedMessage("Ёлемента с таким ID нет в коллекции."));
                 }
@@ -121,11 +119,6 @@ public class CommandReceiver {
     public void remove_by_id(SerializedArgumentCommand command, Socket socket) throws IOException, DatabaseException {
         if (checkUser(command.getLogin(), command.getPassword(), socket)) {
             Long humanID;
-
-            /*
-            List<Integer> deleteID = databaseManager.clear(command.getLogin());
-            deleteID.forEach(collectionManager::remove_by_id);
-             */
             try {
                 humanID = Long.parseLong(command.getArg());
                 if (collectionUtils.checkExist(humanID)) {
@@ -141,6 +134,35 @@ public class CommandReceiver {
             }
             System.out.println(String.format(" лиенту %s:%s отправлен результат работы команды REMOVE_BY_ID", socket.getInetAddress(), socket.getPort()));
         }
+    }
+
+    public void remove_by_impactspeed(SerializedArgumentCommand command, Socket socket) throws IOException, DatabaseException {
+        forkJoinPool.submit(() -> {
+
+            try {
+                if (checkUser(command.getLogin(), command.getPassword(), socket)) {
+                    Float humanSpeed;
+
+                    try {
+                        humanSpeed = Float.parseFloat(command.getArg());
+                        if (collectionUtils.checkExist(humanSpeed)) {
+                            if (databaseManager.removeBySpeed(humanSpeed, command.getLogin())) {
+                                collectionManager.remove_any_by_impact_speed(humanSpeed);
+                                sendObject(socket, new SerializedMessage("Ёлемент с speed " + humanSpeed + " успешно удален из коллекции."));
+                            } else
+                                sendObject(socket, new SerializedMessage("Ёлемент с speed " + humanSpeed + " создан другим пользователем."));
+                        } else {
+                            sendObject(socket, new SerializedMessage("Ёлемента с таким speed нет в коллекции."));
+                        }
+                    } catch (NumberFormatException e) {
+                        sendObject(socket, new SerializedMessage(" оманда не выполнена. ¬ы ввели некорректный аргумент."));
+                    }
+                    System.out.println(String.format(" лиенту %s:%s отправлен результат работы команды REMOVE_BY_IMPACT_SPEED", socket.getInetAddress(), socket.getPort()));
+                }
+            } catch (IOException | DatabaseException e) {
+                System.out.println("„то-то пошло не так...");
+            }
+        });
     }
 
     public void clear(SerializedCommand command, Socket socket) throws IOException, DatabaseException {
@@ -223,34 +245,7 @@ public class CommandReceiver {
         System.out.println(String.format(" лиенту %s:%s отправлен результат работы команды PRINT_FIELD_ASCENDING", socket.getInetAddress(), socket.getPort()));
     }
 
-    public void remove_by_impact_speed(SerializedArgumentCommand command, Socket socket) throws IOException, DatabaseException {
-        forkJoinPool.submit(() -> {
-            try {
-                if (checkUser(command.getLogin(), command.getPassword(), socket)) {
-                    Float humanSpeed;
-                    try {
-                        humanSpeed = Float.parseFloat(command.getArg());
-                        if (collectionUtils.checkExist(humanSpeed)) {
-                            if (databaseManager.removeBySpeed(humanSpeed, command.getLogin())) {
-                                collectionManager.remove_any_by_impact_speed(humanSpeed);
-                                sendObject(socket, new SerializedMessage("Ёлемент с speed " + humanSpeed + " успешно удален из коллекции."));
-                            } else
-                                sendObject(socket, new SerializedMessage("Ёлемент с speed " + humanSpeed + " создан другим пользователем."));
-                        } else {
-                            sendObject(socket, new SerializedMessage("Ёлемента с таким speed нет в коллекции."));
-                        }
-                    } catch (NumberFormatException e) {
-                        sendObject(socket, new SerializedMessage(" оманда не выполнена. ¬ы ввели некорректный аргумент."));
-                    }
-                    System.out.println(String.format(" лиенту %s:%s отправлен результат работы команды REMOVE_BY_IMPACT_SPEED", socket.getInetAddress(), socket.getPort()));
-                }
-            } catch (IOException | DatabaseException e) {
-                System.out.println("„то-то пошло не так...");
-            }
-        });
-    }
-
-    public void shuffle(SerializedCommand command, Socket socket) throws IOException {
+    public void shuffle(SerializedCommand command, Socket socket) {
         forkJoinPool.submit(() -> {
             try {
                 if (checkUser(command.getLogin(), command.getPassword(), socket)) {

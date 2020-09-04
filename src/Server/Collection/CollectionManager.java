@@ -45,7 +45,7 @@ public class CollectionManager {
     }
 
     //обновить значение элемента коллекции, id которого равен заданному
-    public  void update(HumanBeing personToUpdate, Long elementId) {
+    public void update(HumanBeing personToUpdate, Long elementId) {
         Collection<HumanBeing> syncList = Collections.synchronizedCollection(linkedList);
         syncList.forEach(HumanBeing -> {
             if (HumanBeing.getId().equals(elementId)) {

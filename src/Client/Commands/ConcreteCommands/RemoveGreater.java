@@ -21,7 +21,7 @@ public class RemoveGreater extends ACommand {
     }
 
     @Override
-    public void execute(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
+    public void execute(String[] args) throws ClassNotFoundException {
         if (args.length > 1) {
             System.out.println("Введен не нужный аргумент. Команда приведена к базовой команде remove_greater.");
         }
@@ -30,6 +30,6 @@ public class RemoveGreater extends ACommand {
 
     @Override
     public String writeInfo() {
-        return "Команда remove_greater : удалить из коллекции все элементы, превышающие заданный.";
+        return "Команда remove_greater - удалить из коллекции все элементы, превышающие заданный.";
     }
 }

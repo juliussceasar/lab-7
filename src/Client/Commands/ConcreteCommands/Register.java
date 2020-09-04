@@ -14,7 +14,7 @@ public class Register extends ACommand {
     }
 
     @Override
-    protected void execute(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+    protected void execute(String[] args) throws ClassNotFoundException {
         if (args.length == 3) {
             //по умолчанию команда регает пользователя в базе данных на сервере +
             //сменяет текущего пользователя, который вызывает команды!
@@ -26,6 +26,6 @@ public class Register extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return "Команда register : регистрация пользователя";
+        return "Команда register - register login password - регистрация пользователя";
     }
 }

@@ -8,7 +8,7 @@ import Commands.SerializedCommand;
 import java.io.IOException;
 import java.net.Socket;
 
-public class printFieldAscendingWeaponType extends ACommand {
+public class PrintFieldAscendingWeaponType extends ACommand {
     private static final long serialVersionUID = 1234L;
 
     @Override

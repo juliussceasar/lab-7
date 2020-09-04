@@ -29,6 +29,6 @@ public class Show extends ACommand {
 
     @Override
     public String writeInfo() {
-        return "Команда show : вывести все элементы коллекции в строковом представлении.";
+        return "Команда show - вывести все элементы коллекции в строковом представлении.";
     }
 }

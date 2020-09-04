@@ -47,20 +47,21 @@ public class Controller {
 
             server = new ServerSocket(port);
             System.out.println("Сервер запущен!");
+            ExecutorService pool = Executors.newFixedThreadPool(2);
             while (true) {
                 Socket clientSocket = server.accept();
                 System.out.println("Присоединяется пользователь: " + clientSocket);
                 //thread многопоточное чтение запросов --> Fixed Thread Pool
-                ExecutorService pool = Executors.newFixedThreadPool(2);
 
-                Runnable task1 = () -> {
-                    System.out.println("Task is running (a thread)");
+                Runnable task = () -> {
+                    System.out.println("A thread is up and running.");
                     ObjectInputStream in = null;
                     try {
                         try {
                             while (true) {
                                 in = new ObjectInputStream(clientSocket.getInputStream());
                                 Object o = in.readObject();
+                                System.out.println(o);
                                 translating.translate(o, clientSocket);
                             }
 
@@ -70,6 +71,7 @@ public class Controller {
                         } catch (InterruptedException | DatabaseException e) {
                             System.out.println("Something happenned with a thread or database...");
                         } finally {
+                            System.out.println("Закрываем тредик. И сервер.");
                             Thread.currentThread().interrupt();
                             clientSocket.close();
                             if (in != null) {
@@ -80,7 +82,7 @@ public class Controller {
                         System.out.println("Something is wrong with streams.");
                     }
                 };
-                pool.execute(task1);
+                pool.submit(task);
             }
         } catch (IOException e) {
             //;

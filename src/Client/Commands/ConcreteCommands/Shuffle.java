@@ -17,7 +17,7 @@ public class Shuffle extends ACommand {
     public Shuffle() { }
 
     @Override
-    public void execute(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
+    public void execute(String[] args) throws ClassNotFoundException {
         if (args.length > 1) {
             System.out.println("Введен не нужный аргумент. Команда приведена к базовой команде show.");
         }
@@ -26,6 +26,6 @@ public class Shuffle extends ACommand {
 
     @Override
     public String writeInfo() {
-        return "Команда shuffle : вывести все элементы коллекции в рандомно в строковом представлении.";
+        return "Команда shuffle - вывести все элементы коллекции в рандомно в строковом представлении.";
     }
 }

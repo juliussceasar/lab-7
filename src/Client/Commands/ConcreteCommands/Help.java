@@ -26,6 +26,6 @@ public class Help extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return " оманда help : получить справку по доступным командам.";
+        return " оманда help - получить справку по доступным командам.";
     }
 }

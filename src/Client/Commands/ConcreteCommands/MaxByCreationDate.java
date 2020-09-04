@@ -15,7 +15,7 @@ public class MaxByCreationDate extends ACommand {
     }
 
     @Override
-    protected void execute(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+    protected void execute(String[] args) throws ClassNotFoundException {
         if (args.length > 1) {
             System.out.println("Введен не нужный аргумент. Команда приведена к базовой команде max_by_creation_date.");
         }
@@ -24,6 +24,6 @@ public class MaxByCreationDate extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return "Команда max_by_creation_date : вывести любой объект из коллекции, значение поля groupAdmin которого является максимальным.";
+        return "Команда max_by_creation_date - вывести любой объект из коллекции, значение поля groupAdmin которого является максимальным.";
     }
 }

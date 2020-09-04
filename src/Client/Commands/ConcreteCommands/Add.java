@@ -27,6 +27,6 @@ public class Add extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return "Команда add : добавить новый элемент в коллекцию.";
+        return "Команда add - добавить новый элемент в коллекцию.";
     }
 }

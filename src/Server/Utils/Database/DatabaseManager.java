@@ -42,7 +42,7 @@ public class DatabaseManager {
             Connection connection = DriverManager.getConnection(url, user, password);
             ScriptRunner sr = new ScriptRunner(connection);
             try {
-                Files.walk(Paths.get("C:/Users/mi/Documents/lab-6/src/Server/Utils/Database/SQL"))
+                Files.walk(Paths.get("C:/Users/mi/Documents/lab-7/src/Server/Utils/Database/SQL"))
                         .filter(Files::isRegularFile)
                         .forEach(path -> {
                             Reader reader = null;
@@ -73,12 +73,13 @@ public class DatabaseManager {
         return this.<Integer>handleQuery((Connection connection) -> {
             try {
                 Car car = humanBeing.getCar();
-                String addCarSql = "INSERT INTO car (name, cool)" +
-                        "VALUES (?, ?)";
+                String addCarSql = "INSERT INTO car (name, cool, login)" +
+                        "VALUES (?, ?, ?)";
 
                 PreparedStatement statement = connection.prepareStatement(addCarSql, Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, car.getName());
                 statement.setBoolean(2, car.getCool());
+                statement.setString(3, username);
                 statement.executeUpdate();
 
                 ResultSet rs = statement.getGeneratedKeys();
@@ -163,7 +164,7 @@ public class DatabaseManager {
     public boolean removeById(Long id, String username) throws DatabaseException {
         return handleQuery((Connection connection) -> {
             String query =
-                    "DELETE from humanbeing" +
+                    "DELETE from humanBeing" +
                             " USING \"user\"" +
                             " WHERE humanBeing.id = ? and \"user\".login = humanBeing.login" +
                             " AND \"user\".login = ?";
@@ -193,59 +194,66 @@ public class DatabaseManager {
      */
     public boolean updateById(HumanBeing humanBeing, Long id, String username) throws DatabaseException {
         return handleQuery((Connection connection) -> {
-                try {
-                    connection.createStatement().execute("BEGIN TRANSACTION;");
+            try (Statement stmnt = connection.createStatement()) {
+                stmnt.execute("START TRANSACTION;");
 
-                    String query =
-                            "UPDATE humanBeing" +
-                                    " SET name = ?," +
-                                    "coordinateX = ?," +
-                                    "coordinateY = ?," +
-                                    "realHero = ?," +
-                                    "hasToothPick = ?," +
-                                    "impactSpeed = ?," +
-                                    "soundtrackName = ?," +
-                                    "weaponType = ?," +
-                                    "mood = ?," +
-                                    " FROM humanBeing, \"user\"" +
-                                    " WHERE humanBeing.id = ? AND \"user\".login = ? and \"user\".login = humanBeing.login;" +
-                                    //
-                                    " UPDATE car" +
-                                    " SET name = ?," +
-                                    "cool = ?," +
-                                    " FROM humanBeing, \"user\"" +
-                                    " WHERE humanBeing.id = ? AND \"user\".login = humanBeing.login and \"user\".login = ?;";
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    //name + coordinates + time + realHero + hasToothpick +
-                    // impactSpeed + soundtrackName + weaponType + mood + car
+                String query =
+                        "UPDATE humanBeing" +
+                                " SET name = ?," +
+                                "coordinateX = ?," +
+                                "coordinateY = ?," +
+                                "realHero = ?," +
+                                "hasToothPick = ?," +
+                                "impactSpeed = ?," +
+                                "soundtrackName = ?," +
+                                "weaponType = ?," +
+                                "mood = ?" +
+                                " from \"user\" " +
+                                " WHERE humanBeing.id = ? AND \"user\".login = ? AND \"user\".login = humanBeing.login;" +
 
-                    statement.setString(1, humanBeing.getName());
-                    statement.setDouble(2, humanBeing.getCoordinates().getX());
-                    statement.setDouble(3, humanBeing.getCoordinates().getY());
-                    //statement.setTimestamp(4, Timestamp.valueOf(humanBeing.getCreationDate().toLocalDateTime()));
-                    statement.setBoolean(4, humanBeing.getRealHero());
-                    statement.setBoolean(5, humanBeing.getHasToothpick());
-                    statement.setFloat(6, humanBeing.getImpactSpeed());
-                    statement.setString(7, humanBeing.getSoundtrackName());
-                    statement.setString(8, humanBeing.getWeaponType().name());
-                    statement.setString(9, humanBeing.getMood().name());
-                    statement.setLong(10, id);
-                    statement.setString(11, username);
+                                " UPDATE car" +
+                                " SET name = ?," +
+                                "cool = ?" +
+                                " from \"user\" " +
+                                " WHERE car.login = ? AND car.login = \"user\".login;";
+                                //login - это имя владельца
+                                //humanBeing - элемент таблицы HumanBeing (айди элемента + логин юзера создавшего его)
+                                //user - элемент таблицы юзеры (логин + порядковый айди юзера в системе + его пароль)
 
-                    statement.setString(12, humanBeing.getCar().getName());
-                    statement.setBoolean(13, humanBeing.getCar().getCool());
-                    statement.setLong(14, id);
-                    statement.setString(15, username);
 
-                    int result = statement.executeUpdate();
 
-                    connection.createStatement().execute("COMMIT;");
+                PreparedStatement statement = connection.prepareStatement(query);
+                //name + coordinates + time + realHero + hasToothpick +
+                // impactSpeed + soundtrackName + weaponType + mood + car
 
-                    return result > 0; // Если true, значит результат не пустой и записи обновлены
-                } catch (SQLException e) {
-                    System.out.println("Произошла ошибка при обновлении элемента по id");
-                    return false;
-                }
+
+                statement.setString(1, humanBeing.getName());
+                statement.setDouble(2, humanBeing.getCoordinates().getX());
+                statement.setDouble(3, humanBeing.getCoordinates().getY());
+                statement.setBoolean(4, humanBeing.getRealHero());
+                statement.setBoolean(5, humanBeing.getHasToothpick());
+                statement.setDouble(6, humanBeing.getImpactSpeed());
+                statement.setString(7, humanBeing.getSoundtrackName());
+                statement.setString(8, humanBeing.getWeaponType().name());
+                statement.setString(9, humanBeing.getMood().name());
+                statement.setLong(10, id);
+                statement.setString(11, username);
+
+                statement.setString(12, humanBeing.getCar().getName());
+                statement.setBoolean(13, humanBeing.getCar().getCool());
+                statement.setString(14, username);
+
+
+                int result = statement.executeUpdate();
+
+                stmnt.execute("COMMIT;");
+                System.out.println(result);
+                return result > 0; // Если true, значит результат не пустой и записи обновлены
+                // если false, result = 0, обновления не произошло
+            } catch (SQLException failure) {
+                System.out.println("Произошла ошибка при обновлении элемента по id");
+                return false;
+            }
         });
     }
 
@@ -261,7 +269,7 @@ public class DatabaseManager {
             collectionManager.initList();
             try {
                     ResultSet rsCar = connection.createStatement().executeQuery("select * from car");
-                    ResultSet rs = connection.createStatement().executeQuery("select * from humanbeing order by id");
+                    ResultSet rs = connection.createStatement().executeQuery("select * from humanBeing order by id");
 
                     HumanBeing humanBeing;
                     while (rs.next() && rsCar.next()) {
@@ -386,10 +394,10 @@ public class DatabaseManager {
     public List<Integer> clear(String username) throws DatabaseException {
         return handleQuery((Connection connection) -> {
                 try {
-                    String query = "DELETE FROM humanbeing" +
+                    String query = "DELETE FROM humanBeing" +
                             " USING \"user\"" +
                             " WHERE \"user\".login = ? and \"user\".login = humanBeing.login" +
-                            " RETURNING humanbeing.id;";
+                            " RETURNING humanBeing.id;";
 
                     PreparedStatement statement = connection.prepareStatement(query);
                     statement.setString(1, username);
@@ -446,7 +454,7 @@ public class DatabaseManager {
     public boolean removeBySpeed(Float humanSpeed, String username) throws DatabaseException {
         return handleQuery((Connection connection) -> {
             String query =
-                    "DELETE from humanbeing" +
+                    "DELETE from humanBeing" +
                             " USING \"user\" " +
                             " WHERE humanBeing.impactSpeed = ?" +
                             "AND \"user\".login = humanBeing.login AND \"user\".login = ?;";
@@ -458,7 +466,7 @@ public class DatabaseManager {
                 int rowsDeleted = statement.executeUpdate();
                 return rowsDeleted > 0;
             } catch (SQLException e) {
-                System.out.println("Произошла ошибка при удалении элемента по id");
+                System.out.println("Произошла ошибка при удалении элемента по speed");
                 return false;
             }
         });

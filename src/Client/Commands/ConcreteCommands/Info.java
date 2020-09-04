@@ -18,7 +18,7 @@ public class Info extends ACommand {
     }
 
     @Override
-    protected void execute(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+    protected void execute(String[] args) throws ClassNotFoundException {
         if (args.length > 1) {
             System.out.println("Введен не нужный аргумент. Команда приведена к базовой команде info.");
         }
@@ -27,6 +27,6 @@ public class Info extends ACommand {
 
     @Override
     protected String writeInfo() {
-        return "Команда info : вывести в стандартный поток вывода информацию о коллекции.";
+        return "Команда info - вывести в стандартный поток вывода информацию о коллекции.";
     }
 }

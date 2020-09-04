@@ -22,7 +22,7 @@ public class Main {
 
         DatabaseManager databaseManager = new DatabaseManager(hashEncrypter);
         CommandReceiver commandReceiver = new CommandReceiver(collectionManager, collectionUtils,
-                databaseManager, validator);
+                databaseManager);
         Controller controller = new Controller(collectionManager, databaseManager, new Translating(commandReceiver));
         try {
             controller.run(args[0]);
